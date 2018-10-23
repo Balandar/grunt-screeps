@@ -60,6 +60,18 @@ module.exports = function (grunt) {
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                 }
+            };
+
+            if (options.proxy) {
+                delete reqParams.hostname;
+                reqParams.host = options.proxy;
+                reqParams.port = options.proxyport;
+                if(server.host){
+                  reqParams.path = (server.http ? 'http://'+server.host+'/api/user/code' : 'https://'+server.host+'/api/user/code') ;
+                }else{
+                  reqParams.path = 'https://screeps.com/api/user/code';
+                }
+                reqParams.headers['host'] = server.host || 'screeps.com';
             }
 
             if (options.token) {
@@ -68,8 +80,17 @@ module.exports = function (grunt) {
                 reqParams.auth = options.email + ':' + options.password;
             }
 
-            var proto = server.http ? http : https,
-                req = proto.request(reqParams, function(res) {
+            var proto = server.http ? http : https;
+
+            if (options.proxyssl != null) {
+                if (options.proxyssl){
+                  proto = https;
+                }else{
+                  proto = http;
+                }
+            }
+
+            var req = proto.request(reqParams, function(res) {
                 res.setEncoding('utf8');
 
                 var data = '';
