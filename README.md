@@ -27,8 +27,9 @@ module.exports = function(grunt) {
                 // password: 'YOUR_PASSWORD', // Grunt will use the password when there's no token supplied
                 branch: 'default',
                 ptr: false,
-                proxy: 'proxy',
-                proxyport: proxyport
+                proxy: 'proxy', // proxy IP
+                proxyport: proxyport, // proxy port
+                proxyssl: false // proxy protocol
             },
             dist: {
                 files: [
